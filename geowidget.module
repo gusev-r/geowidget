@@ -2,7 +2,8 @@
 
 /**
  * @file
- * Updates Drupal to use the latest version of jQuery.
+ * Main file module Geowidget
+ * includes all hook
  */
 
 /**
