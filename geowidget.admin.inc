@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Configuration module.
+ * Administrative configuration form
  */
 
 /**

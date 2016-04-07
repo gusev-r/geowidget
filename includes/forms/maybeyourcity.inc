@@ -1,5 +1,19 @@
 <?php
 
+/**
+ *
+ * @param $form
+ *   An associative array containing the structure of the form.
+ * @param $form_state
+ *   The form state array.
+ *
+ * @return
+ *   An array containing the title and any custom form elements to be displayed
+ *   in the node editing form.
+ *
+ * @return
+ *   The form array.
+ */
 function geowidget_maybeyourcity_form($form, &$form_state) {
   drupal_add_library('system', 'ui.dialog');
   if (!empty($_SESSION['geowidget'])) {
@@ -69,6 +83,11 @@ function geowidget_maybeyourcity_form($form, &$form_state) {
   return $form;
 }
 
+/**
+ * Addition ajax callback to submit "yes".
+ *
+ * @see geowidget_maybeyourcity_form()
+ */
 function geowidget_maybeyourcity_form_set_city_callback($form, $form_state) {
   if ($form['city_id'] != null) {
     $city = city_load($form['city_id']['#value']);
@@ -85,6 +104,11 @@ function geowidget_maybeyourcity_form_set_city_callback($form, $form_state) {
   return $form;
 }
 
+/**
+ * Addition ajax callback to submit "no" and "text_maybe_city".
+ *
+ * @see geowidget_maybeyourcity_form()
+ */
 function geowidget_maybeyourcity_form_loadcity_callback($form, &$form_state) {
   return array(
     '#type' => 'ajax',
@@ -97,6 +121,14 @@ function geowidget_maybeyourcity_form_loadcity_callback($form, &$form_state) {
   );
 }
 
+/**
+ *
+ * Helper functions for geowidget_maybeyourcity_form_loadcity_callback().
+ *
+ * @return array
+ *   all city.
+ * @see geowidget_maybeyourcity_form_loadcity_callback()
+ */
 function _param_geowidget_maybeyourcity_form_loadcity_callback() {
   $city = &drupal_static(__FUNCTION__);
   if (!isset($city)) {

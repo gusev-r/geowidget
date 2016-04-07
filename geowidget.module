@@ -2,8 +2,8 @@
 
 /**
  * @file
- * Main file module Geowidget
- * includes all hook
+ * Main file module Geowidget and
+ * includes all hook.
  */
 
 /**
@@ -69,7 +69,7 @@ function geowidget_theme() {
 /**
  *
  * @param string $ip
- * @return object entity city
+ * @return object entity city.
  */
 function getCityMaybeCity($ip = NULL) {
   if (!$ip){
@@ -94,8 +94,9 @@ function _geowidget_getGeoIPData($ipAddress) {
 
 /**
  *
- * @param int $geonameId  look http://www.geonames.org/
- * @return object entity city
+ * @param int $geonameId
+ *   look http://www.geonames.org/ .
+ * @return object entity city.
  */
 function _geowidget_getCityByGeonameId($geonameId) {
   $cityId = _geowidget_getCtiyIdByGeonameId($geonameId);
@@ -109,7 +110,7 @@ function _geowidget_getCityByGeonameId($geonameId) {
 /**
  *
  * @param integer $geonameId  look http://www.geonames.org/
- * @return integer city id
+ * @return integer city id.
  */
 function _geowidget_getCtiyIdByGeonameId($geonameId) {
   $query = db_select('geowidget_city', 'c');
