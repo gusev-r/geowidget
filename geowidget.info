@@ -1,0 +1,10 @@
+name = Geowidget
+description = "geowidget"
+core = 7.x
+package = geowidget
+
+configure = admin/config/content/geowidget
+
+files[] = /includes/GeoIPData.php
+
+dependencies[] = geowidget_city

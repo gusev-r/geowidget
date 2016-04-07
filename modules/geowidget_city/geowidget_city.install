@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * @file
+ * Install/Update/Uninstall functions for geowidget module.
+ */
+
+/**
+ * Implements hook_schema().
+ *
+ * @see hook_schema()
+ * @link schemaapi Schema API @endlink
+ */
+function geowidget_city_schema() { // user data
+    $schema['geowidget_city'] = array(
+        'fields' => array(
+          'id' => array(
+            'description' => 'City ID',
+            'type' => 'serial',
+            'unsigned' => true,
+            'not null' => true,
+          ),
+          'geoname_id' => array(
+            'description' => 'city \'geoname_id\' from geonames.org',
+            'type' => 'int',
+            'unsigned' => true,
+            'not null' => true,
+          ),
+          'parent_id' => array(
+            'description' => 'Parent city',
+            'type' => 'int',
+            'unsigned' => true,
+            'not null' => true,
+          ),
+          'title' => array(
+            'description' => 'City title',
+            'type' => 'varchar',
+            'length' => 200,
+            'not null' => true,
+          ),
+        )+entity_exportable_schema_fields(),
+        'primary key' => array('id'),
+    );
+    return $schema;
+}
+
+
+/**
+ * Implements hook_uninstall().
+ *
+ * At uninstall time we'll notify field.module that the entity was deleted
+ * so that attached fields can be cleaned up.
+ *
+ * @ingroup entity_example
+ */
+function geowidget_city_uninstall() {
+  field_attach_delete_bundle('city', 'city');
+}

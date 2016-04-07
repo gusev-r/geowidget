@@ -1,0 +1,161 @@
+.tree-root .city {
+  float: left;
+  margin: 0 10px 0 0;
+}
+.tree-root .city > .title {
+  cursor: pointer;
+}
+.tree-root .city > .title.active {
+  color: #f00;
+}
+.tree-root > .city {
+  margin: 0;
+  width: 50%;
+}
+.tree-root > .city > .title {
+  font-weight: bold;
+  cursor: pointer;
+}
+.tree-root > .city:nth-child(2n+1) {
+  clear: both;
+}
+.header {
+  margin: 0 0 20px;
+}
+.header .letter {
+  padding: 5px;
+  float: left;
+  margin: 0 10px 0 0;
+  cursor: pointer;
+}
+.header .letter.active {
+  cursor: context-menu;
+  color: #f00;
+}
+.header:after {
+  clear: both;
+  content: ' ';
+  display: table;
+}
+@keyframes example {
+  from {
+    background-color: red;
+  }
+  to {
+    background-color: yellow;
+  }
+}
+#geo-form-wrapper .btn-set-city,
+#geo-form-wrapper .form-item-city-id {
+  display: none;
+}
+#geo-form-wrapper .geowidget-maybeyourcity-form:after {
+  clear: both;
+  content: ' ';
+  display: table;
+}
+#geo-form-wrapper .wrapper-btn-maybe-city .suffix-btn-maybe-city,
+#geo-form-wrapper .wrapper-btn-maybe-city .prefix-btn-maybe-city {
+  display: none;
+}
+#geo-form-wrapper .wrapper-btn-maybe-city input[type="submit"].btn-maybe-city {
+  background: #fff url('../../img/compass.png') no-repeat 8px 50%;
+}
+#geo-form-wrapper .wrapper-btn-maybe-city .btn-maybe-city {
+  border: none;
+  margin: 0;
+  padding: 9px 14px 7px 44px;
+  border-radius: 15px;
+  position: relative;
+  font-size: 14px;
+  color: #9c9c9c;
+  line-height: 1;
+  text-align: left;
+  letter-spacing: -0.75pt;
+  width: 100%;
+  outline: none;
+  transition: 1s ease-out;
+}
+#geo-form-wrapper .wrapper-btn-maybe-city .btn-maybe-city .ajax-progress-throbber {
+  float: right;
+}
+#geo-form-wrapper .wrapper-btn-maybe-city .btn-maybe-city .ajax-progress-throbber .glyphicon-refresh {
+  font-size: 10px;
+}
+#geo-form-wrapper .wrapper-btn-maybe-city .btn-maybe-city:before {
+  content: ' ';
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  background: transparent url('../../img/compass.png') no-repeat 0 0;
+  position: absolute;
+  top: 50%;
+  margin-top: -9px;
+  left: 14px;
+  transition: 1s ease-out;
+}
+#geo-form-wrapper .wrapper-btn-maybe-city .btn-maybe-city:hover {
+  color: #383838;
+  box-shadow: inset 1.5px 2.598px 5px 0px rgba(0, 0, 0, 0.26);
+}
+#geo-form-wrapper .wrapper-btn-maybe-city .btn-maybe-city:hover:before {
+  -webkit-transform: rotate(360deg);
+  transform: rotate(360deg);
+}
+#geo-form-wrapper .wrapper-maybe-you-city {
+  margin: 19px 0 0 0;
+  color: #ffffff;
+  position: absolute;
+}
+#geo-form-wrapper .wrapper-maybe-you-city .maybe-you-city {
+  display: block;
+  background: #383838;
+  float: left;
+  padding: 15px 14px 20px;
+  margin: 8px 0 0 0;
+  border-radius: 8px;
+}
+#geo-form-wrapper .wrapper-maybe-you-city .maybe-you-city .text-question {
+  line-height: 19px;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+#geo-form-wrapper .wrapper-maybe-you-city .maybe-you-city .text-question .city {
+  font-weight: bold;
+  display: inline-block;
+}
+#geo-form-wrapper .wrapper-maybe-you-city .maybe-you-city .btn-no,
+#geo-form-wrapper .wrapper-maybe-you-city .maybe-you-city .btn-yes {
+  color: #fff;
+  background: #42d14f;
+  border: none;
+  border-radius: 6px;
+  padding: 3px 0;
+  margin: 0;
+  font-size: 16px;
+  width: 71px;
+  box-sizing: border-box;
+}
+#geo-form-wrapper .wrapper-maybe-you-city .maybe-you-city .btn-no:hover,
+#geo-form-wrapper .wrapper-maybe-you-city .maybe-you-city .btn-yes:hover {
+  color: #b8f7be;
+  background: #3cbe48;
+}
+#geo-form-wrapper .wrapper-maybe-you-city .maybe-you-city .btn-no {
+  margin-left: 13px;
+  background-color: #ef1947;
+}
+#geo-form-wrapper .wrapper-maybe-you-city .maybe-you-city .btn-no:hover {
+  color: #92112d;
+  background: #db1841;
+}
+#geo-form-wrapper .wrapper-maybe-you-city .maybe-you-city .text-motivation-to-choose {
+  display: none;
+}
+#geo-form-wrapper .wrapper-maybe-you-city:after,
+#geo-form-wrapper .wrapper-maybe-you-city:before {
+  clear: both;
+  content: ' ';
+  display: table;
+}
+/*# sourceMappingURL=geowidget.maybeyourcity.css.map */

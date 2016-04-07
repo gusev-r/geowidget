@@ -1,0 +1,321 @@
+<?php
+
+/**
+ * @file
+ * Realization of entity city
+ */
+
+    const CITY_PATH = 'city';
+    const ADMIN_CITY_PATH = 'admin/structure/geowidget_city';
+
+/**
+ * Implements hookt_menu().
+ */
+function geowidget_city_menu() {
+  $items['geowidget/cities/autocomplete'] = array(
+    'page callback' => '_city_autocomplete',
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK
+  );
+  return $items;
+}
+
+/**
+ * Helper function: autocomplete field "Parent city"
+ *
+ * @return
+ *   An array of city(title|id) arrays
+ */
+function _city_autocomplete($param = null) {
+  if (empty($param)) {
+    return '';
+  }
+  //search table `cities` for cities that begin with the letters the user enters in the form 	title
+  $matches = array();
+  $result = db_select('geowidget_city', 'c')
+      ->fields('c', array('id', 'title'))
+      ->condition('title', '%' . db_like($param) . '%', 'LIKE')
+      ->execute();
+
+  // save the query to matches
+  foreach ($result as $row) {
+    $matches[$row->title . ' (' . $row->id . ')'] = $row->title;
+  }
+  // Return the result to the form in json
+  drupal_json_output($matches);
+}
+
+/**
+ * Implements hook_admin_paths().
+ */
+function geowidget_city_admin_paths() {
+  $paths = array(
+    CITY_PATH . '/*/edit' => TRUE,
+    CITY_PATH . '/add' => TRUE,
+    CITY_PATH . '/add/*' => TRUE,
+    CITY_PATH . '/*/delete' => TRUE,
+  );
+  return $paths;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function geowidget_city_theme() {
+  return array(
+    'city' => array(
+      'render element' => 'elements',
+      'template' => 'templates/geowidget_city',
+    )
+  );
+}
+/**
+ * Implements hook_entity_info().
+ */
+function geowidget_city_entity_info() {
+  $return['city'] = array(
+    'label' => 'City',
+    'controller class' => 'CityEntityController',
+    'entity class' => 'City',
+    'metadata controller class' => 'GeowidgetCityMetadataController',
+    'base table' => 'geowidget_city',
+    'uri callback' => 'entity_class_uri',
+    'entity keys' => array(
+      'id' => 'id',
+      'label' => 'title'
+    ),
+    'module' => 'geowidget_city',
+    'admin ui' => array(
+      'path' => ADMIN_CITY_PATH,
+      'file' => 'city.admin.inc',
+      'controller class' => 'EntityGeowidgetCityUIController'
+    ),
+    'access callback' => 'geowidget_city_access',
+    'fieldable' => TRUE,
+    'bundles' => array(
+      'city' => array(
+        'label' => t('city bundles'),
+        'admin' => array(
+          'path' => ADMIN_CITY_PATH,
+          'access arguments' => array('administer users'),
+        ),
+      ),
+    ),
+  );
+  return $return;
+}
+
+/**
+ * Determines whether the given user has access to a city.
+ *
+ * @param $op
+ *   The operation being performed. One of 'view', 'update', 'create', 'delete'
+ *   or just 'edit' (being the same as 'create' or 'update').
+ * @param $city
+ *   (optional) A city to check access for. If nothing is given, access for
+ *   all cities is determined.
+ * @param $account
+ *   The user to check for. Leave it to NULL to check for the global user.
+ * @return boolean
+ *   Whether access is allowed or not.
+ *
+ */
+function geowidget_city_access($op, $city = NULL, $account = NULL) {
+  return TRUE; // заглушка
+}
+
+/**
+ * Callback for getting city properties.
+ */
+function entity_metadata_geowidgetcity_get_properties($city, array $options, $name, $entity_type) {
+  switch ($name) {
+    case 'edit_url':
+      return url($city->real_path() . '/edit', $options);
+    case 'delete_url':
+      return url($city->real_path() . '/delete', $options);
+    case 'title':
+      return $city->label();
+    case 'parent_city':
+      return $city->parent_id;
+  }
+}
+
+/**
+ * Menu callback: Displays a single entity city.
+ *
+ * @param $city
+ *   The city object.
+ *
+ * @return
+ *   A page array suitable for use by drupal_render().
+ *
+ */
+function city_page_view($city) {
+  return $city->view('page');
+}
+
+/**
+ * Load a city.
+ */
+function city_load($city_id, $reset = FALSE) {
+  $cities = city_load_multiple(array($city_id), array(), $reset);
+  return reset($cities);
+}
+
+/**
+ * Load multiple city based on certain conditions.
+ */
+function city_load_multiple($city_ids = FALSE, $conditions = array(), $reset = FALSE) {
+  return entity_load('city', $city_ids, $conditions, $reset);
+}
+
+/**
+ * Save city.
+ */
+function city_save($city) {
+  entity_save('city', $city);
+}
+
+/**
+ * Delete single city.
+ */
+function city_delete($city) {
+  entity_delete('city', entity_id('city', $city));
+}
+
+class CityEntityController extends EntityAPIController { // при получении данных (c базой)
+
+  public function buildContent($entity, $view_mode = 'full', $langcode = NULL, $content = array()) {
+    $build = parent::buildContent($entity, $view_mode, $langcode, $content);
+    //$build['#contextual_links']['city'] = array('city', array($city->id));
+    return $build;
+  }
+
+}
+
+/**
+ * The class used for city entities.
+ */
+class City extends Entity {
+
+  protected function defaultUri() {
+    return array('path' => $this->real_path());
+  }
+
+  public function real_path() {
+    return CITY_PATH . '/' . $this->id;
+  }
+
+}
+
+/**
+ * Implements hook_pathauto().
+ */
+function geowidget_city_pathauto($op) {
+  if ($op == 'settings') {
+    $settings = array(
+      'module' => 'geowidget_city',
+      'groupheader' => t('City Paths'),
+      'patterndescr' => t('Path city'),
+      'patterndefault' => CITY_PATH . '/[city:title]',
+      'token_type' => 'city',
+      'patternitems' => array(),
+      'batch_update_callback' => 'city_bulk_update_batch_process',
+      'batch_file' => drupal_get_path('module', 'geowidget_city') . '/city.pathauto.inc',
+    );
+
+    // Получаем информацию о нашей сущности и делаем возможность настроить шаблон для каждого бандла в отдельности.
+    $entity_info = entity_get_info('city');
+    foreach ($entity_info['bundles'] as $bundle_id => $bundle) {
+      $settings['patternitems'][$bundle_id] = t('Pattern for all @label paths', array('@label' => $bundle['label']));
+    }
+
+    return (object) $settings;
+  }
+}
+
+/**
+ * Implements hook_path_alias_types().
+ */
+function geowidget_city_path_alias_types() {
+  $objects[CITY_PATH . '/'] = t('City');
+  return $objects;
+}
+
+/**
+ * Update the URL aliases for an individual city.
+ *
+ * @param $city
+ *   A city object.
+ * @param $op
+ *   Operation being performed on the city ('insert', 'update' or 'bulkupdate').
+ */
+function _city_update_alias($city, $op) {
+  // Получаем uri продукта.
+  $uri = city_uri($city);
+  $city_wrapper = entity_metadata_wrapper('city', $city);
+
+  // Получаем машинное имя бандла.
+  $bundle = $city_wrapper->getBundle();
+  // Создаем альяс.
+  module_load_include('inc', 'pathauto');
+  pathauto_create_alias('geowidget_city', $op, $uri['path'], array('city' => $city), $bundle);
+}
+
+/**
+ * Update the URL aliases for multiple citys.
+ *
+ * @param $ids
+ *   An array of city IDs.
+ * @param $op
+ *   Operation being performed on the citys ('insert', 'update' or
+ *   'bulkupdate').
+ */
+function _city_update_alias_multiple($ids, $op) {
+  // Загружаем продукты.
+  $citys = city_load_multiple($ids);
+  foreach ($citys as $city) {
+    // Обновляем альясы.
+    _city_update_alias($city, $op);
+  }
+
+  // Выводим сообщение о том, сколько альясов было обновлено.
+  drupal_set_message(format_plural(count($ids), 'Updated URL alias for 1 city.', 'Updated URL aliases for @count citys.'));
+}
+
+/**
+ * Implements hook_entity_insert().
+ */
+function geowidget_city_entity_insert($entity, $type) {
+  if ($type == 'city') {
+    _city_update_alias($entity, 'insert');
+  }
+}
+
+/**
+ * Implements hook_entity_update().
+ */
+function city_entity_update($entity, $type) {
+  if ($type == 'city') {
+    _city_update_alias($entity, 'update');
+  }
+}
+
+/**
+ * Implements hook_entity_delete().
+ */
+function city_entity_delete($entity, $type) {
+  if ($type == 'city') {
+    $uri = city_uri($entity);
+    pathauto_entity_path_delete_all('city', $entity, $uri['path']);
+  }
+}
+
+/**
+ * Implements callback_entity_info_uri().
+ */
+function city_uri($city) {
+  return array(
+    'path' => CITY_PATH . '/' . $city->id,
+  );
+}

@@ -1,0 +1,118 @@
+<?php
+
+/**
+ * @file
+ * Updates Drupal to use the latest version of jQuery.
+ */
+
+/**
+ * Implements hookt_menu().
+ */
+function geowidget_menu() {
+  $items['admin/config/content/geowidget'] = array(
+    'title' => 'Geowidget',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('geowidget_config_form'),
+    'access arguments' => array('administer users'),
+    'file' => 'geowidget.admin.inc',
+    'file path' => drupal_get_path('module', 'geowidget')
+  );
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function geowidget_block_info() {
+  $blocks['geowidget_maybeyourcity'] = array(
+    'info' => t('geo widget'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function geowidget_block_view($delta = '') {
+  $block = array();
+  switch ($delta) {
+    case 'geowidget_maybeyourcity':
+      module_load_include('inc', 'geowidget', 'includes/forms/maybeyourcity');
+      $block['content'] = theme('geowidget_maybeyourcity', array('body' => drupal_get_form('geowidget_maybeyourcity_form')));
+      break;
+  }
+  return $block;
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function geowidget_menu_alter(&$items) {
+  // for form geowidget_maybeyourcity_form() in block geowidget_maybeyourcity()
+  $items['system/ajax']['file'] = 'includes/forms/maybeyourcity.inc';
+  $items['system/ajax']['file path'] = drupal_get_path('module', 'geowidget');
+}
+
+/**
+ * Implements hook_theme().
+ */
+function geowidget_theme() {
+  return array(
+    'geowidget_maybeyourcity' => array(
+      'template' => 'templates/geowidget_maybeyourcity',
+    ),
+  );
+}
+
+/**
+ *
+ * @param string $ip
+ * @return object entity city
+ */
+function getCityMaybeCity($ip = NULL) {
+  if (!$ip){
+    $ip = $_SERVER['REMOTE_ADDR'];
+  }
+  $geoname_id = _geowidget_getGeoIPData($ip)['city']['geoname_id'];
+
+  return _geowidget_getCityByGeonameId($geoname_id);
+}
+
+/**
+ *
+ * @param string $ipAddress
+ *            the IP address to look up.
+ * @return array the record for the IP address.
+ */
+function _geowidget_getGeoIPData($ipAddress) {
+  $reader = new GeoIPData(drupal_get_path('module', 'geowidget') . '/GeoLite2-City.mmdb');
+  $reader->get($ipAddress);
+  return $reader->get($ipAddress);
+}
+
+/**
+ *
+ * @param int $geonameId  look http://www.geonames.org/
+ * @return object entity city
+ */
+function _geowidget_getCityByGeonameId($geonameId) {
+  $cityId = _geowidget_getCtiyIdByGeonameId($geonameId);
+  if (empty($cityId)) {
+    $cityId = variable_get('geowidget_default_city_id');
+  }
+  $city = city_load($cityId);
+  return $city;
+}
+
+/**
+ *
+ * @param integer $geonameId  look http://www.geonames.org/
+ * @return integer city id
+ */
+function _geowidget_getCtiyIdByGeonameId($geonameId) {
+  $query = db_select('geowidget_city', 'c');
+  $query->fields('c', array('id'));
+  $query->condition('c.geoname_id', $geonameId);
+  return $query->execute()->fetchField();
+}

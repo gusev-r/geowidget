@@ -1,0 +1,168 @@
+.tree-root{
+    .city{
+        >.title{
+            &.active{
+                color: #f00;
+            }
+            cursor: pointer;
+        }
+        float: left;
+        margin: 0 10px 0 0;
+    }
+    >.city{
+        >.title{
+            font-weight: bold;
+            cursor: pointer;
+        }
+        &:nth-child(2n+1){
+            clear: both;
+        }
+        margin: 0;
+        width: 50%;
+    }
+}
+
+.header{
+    .letter{
+        &.active{
+            cursor: context-menu;
+            color: #f00;
+        }
+        padding: 5px;
+        float: left;
+        margin: 0 10px 0 0;
+        cursor: pointer; 
+    }
+    &:after{
+        clear: both;
+        content: ' ';
+        display: table;
+    }
+    margin: 0 0 20px;
+}
+
+@keyframes example {
+    from {background-color: red;}
+    to {background-color: yellow;}
+}
+
+#geo-form-wrapper{
+    .btn-set-city,
+    .form-item-city-id{
+        display: none;
+    }
+    .geowidget-maybeyourcity-form{
+        &:after{
+            clear: both;
+            content: ' ';
+            display: table;
+        }
+    }
+    .wrapper-btn-maybe-city{
+        .suffix-btn-maybe-city,
+        .prefix-btn-maybe-city{
+            display: none; //display: inline-block;
+        }
+        input[type="submit"].btn-maybe-city {
+            background: #fff url('../../img/compass.png') no-repeat 8px 50%;
+        }
+        .btn-maybe-city{
+ 
+            .ajax-progress-throbber{
+                .glyphicon-refresh{
+                    font-size: 10px;
+                }
+                float: right;
+            }
+            &:before{
+                content: ' ';
+                display: inline-block;
+                width: 18px;
+                height: 18px;
+                background: transparent url('../../img/compass.png') no-repeat 0 0;
+                position: absolute;
+                top: 50%;
+                margin-top: -9px;
+                left: 14px;
+                transition: 1s ease-out;
+            }
+            &:hover{
+                &:before{   
+                    -webkit-transform: rotate(360deg);
+                    transform: rotate(360deg);
+                }
+                color: #383838;
+                box-shadow: inset 1.5px 2.598px 5px 0px rgba(0, 0, 0, 0.26);
+            }
+            border: none;
+            margin: 0;
+            padding: 9px 14px 7px 44px;
+            border-radius: 15px;
+            position: relative;
+            font-size: 14px;
+            color: #9c9c9c;
+            line-height: 1;
+            text-align: left;
+            letter-spacing: -0.75pt;
+            width: 100%;
+            outline: none;
+            transition: 1s ease-out;
+        }
+    }
+    .wrapper-maybe-you-city{
+        .maybe-you-city{
+            .text-question{
+                .city{
+                    font-weight: bold;
+                    display: inline-block;
+                }
+                line-height: 19px;
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
+            .btn-no,
+            .btn-yes{
+                &:hover{
+                    color: #b8f7be;
+                    background: #3cbe48;
+                }
+                color: #fff;
+                background: #42d14f;
+                border: none;
+                border-radius: 6px;
+                padding: 3px 0;
+                margin: 0;
+                font-size: 16px;
+                width: 71px;
+                box-sizing: border-box;
+            }
+            .btn-no{
+                &:hover{
+                    color: #92112d;
+                    background: #db1841;
+                }
+                margin-left: 13px;
+                background-color: #ef1947;
+            }
+            .text-motivation-to-choose{
+                display: none;
+            }
+            display: block;
+            background: #383838;
+            float: left;
+            //padding: 15px 13px;
+            padding: 15px 14px 20px;
+            margin: 8px 0 0 0;
+            border-radius: 8px;
+        }
+        &:after,&:before{
+            clear: both;
+            content: ' ';
+            display: table;
+        }
+        margin: 19px 0 0 0;
+        color: #ffffff;
+        //background: url('../../img/arrow.png') no-repeat 16px 0;
+        position: absolute;
+    }
+}

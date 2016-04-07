@@ -1,0 +1,13 @@
+name = Geowidget city
+description = "geowidget city"
+core = 7.x
+package = geowidget
+
+configure = admin/structure/geowidget_city
+
+files[] = city.info.inc
+files[] = city.admin.inc
+
+dependencies[] = entity
+dependencies[] = entity_token
+dependencies[] = pathauto
