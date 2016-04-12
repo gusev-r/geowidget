@@ -72,11 +72,15 @@ function geowidget_theme() {
  * @return object entity city.
  */
 function getCityMaybeCity($ip = NULL) {
-  if (!$ip){
+  if (!$ip) {
     $ip = $_SERVER['REMOTE_ADDR'];
   }
-  $geoname_id = _geowidget_getGeoIPData($ip)['city']['geoname_id'];
-
+  $ip_info = _geowidget_getGeoIPData($ip);
+  if (!empty($ip_info['city']['geoname_id'])) {
+    $geoname_id = $ip_info['city']['geoname_id'];
+  } else {
+    $geoname_id = '';
+  }
   return _geowidget_getCityByGeonameId($geoname_id);
 }
 
